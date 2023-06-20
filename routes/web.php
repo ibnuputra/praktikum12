@@ -5,7 +5,8 @@ use App\Http\Controllers\DashboardController;
 
 // Manggil Controller Produk
 use App\Http\Controllers\ProdukController;
-
+use App\Http\Controllers\TampilanController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -18,11 +19,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
+Route::get('/', [TampilanController::class, 'index']);
 
+//bikin routing untuk amanin data
+Route::group(['middleware' => ['auth']], function () {
 // Bikin routing ke halaman Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index']);
 // Bikin raoyting ke halaman Produk
@@ -37,3 +41,9 @@ Route::get('produk/edit/{id}', [ProdukController::class, 'edit']);
 Route::put('/produk/update/{id}', [ProdukController::class, 'update']);
 // Bikin raoyting ke halaman Delete
 Route::get('/produk/delete/{id}', [ProdukController::class, 'destroy']);
+});
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
