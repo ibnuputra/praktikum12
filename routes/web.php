@@ -24,23 +24,26 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [TampilanController::class, 'index']);
+    //bikin routing unutuk after_register
+
 
 //bikin routing untuk amanin data
 Route::group(['middleware' => ['auth']], function () {
-// Bikin routing ke halaman Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index']);
-// Bikin raoyting ke halaman Produk
-Route::get('/produk', [ProdukController::class, 'index']);
-// Bikin raoyting ke halaman Create
-Route::get('/produk/create', [ProdukController::class, 'create']);
-// Bikin raoyting ke halaman Store
-Route::post('/produk/store', [ProdukController::class, 'store']);
-// Bikin raoyting ke halaman Edit
-Route::get('produk/edit/{id}', [ProdukController::class, 'edit']);
-// Bikin raoyting ke halaman Update
-Route::put('/produk/update/{id}', [ProdukController::class, 'update']);
-// Bikin raoyting ke halaman Delete
-Route::get('/produk/delete/{id}', [ProdukController::class, 'destroy']);
+    // Buat route untuk peran admin dan manager
+Route::group(['middleware' => ['auth', 'peran:admin-manager']], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
+    Route::get('/produk/create', [ProdukController::class, 'create']);
+    Route::post('/produk/store', [ProdukController::class, 'store']);
+    Route::get('produk/edit/{id}', [ProdukController::class, 'edit']);
+    Route::put('/produk/update/{id}', [ProdukController::class, 'update']);
+    Route::get('/produk/delete/{id}', [ProdukController::class, 'destroy']);
+});
+
+    // Buat route untuk after_registrasi
+Route::get('/after_register', function () {
+    return view('after_register');
+});
 });
 
 
